@@ -4,349 +4,230 @@ import Group from './Group.png';
 export default function OFPPTApp() {
   const [activeDot, setActiveDot] = useState(1);
   const [buttonPressed, setButtonPressed] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1200);
-  const [isMediumScreen, setIsMediumScreen] = useState(window.innerWidth >= 768 && window.innerWidth < 1200);
-  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth >= 481 && window.innerWidth < 768);
-  const [isExtraSmallScreen, setIsExtraSmallScreen] = useState(window.innerWidth <= 480);
+  const [screenSize, setScreenSize] = useState({
+    width: window.innerWidth,
+    isLarge: window.innerWidth >= 1200,
+    isMedium: window.innerWidth >= 768 && window.innerWidth < 1200,
+    isSmall: window.innerWidth >= 481 && window.innerWidth < 768,
+    isXSmall: window.innerWidth <= 480
+  });
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      setIsLargeScreen(window.innerWidth >= 1200);
-      setIsMediumScreen(window.innerWidth >= 768 && window.innerWidth < 1200);
-      setIsSmallScreen(window.innerWidth >= 481 && window.innerWidth < 768);
-      setIsExtraSmallScreen(window.innerWidth <= 480);
+      const width = window.innerWidth;
+      setScreenSize({
+        width,
+        isLarge: width >= 1200,
+        isMedium: width >= 768 && width < 1200,
+        isSmall: width >= 481 && width < 768,
+        isXSmall: width <= 480
+      });
     };
     
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Auto-cycling dots every 3 seconds
-  useEffect(() => {
     const interval = setInterval(() => {
-      setActiveDot((prev) => (prev % 3) + 1);
+      setActiveDot(prev => (prev % 3) + 1);
     }, 3000);
     
-    return () => clearInterval(interval);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearInterval(interval);
+    };
   }, []);
 
-  // Button click handler
   const handleStart = () => {
     setButtonPressed(true);
-    
     setTimeout(() => {
       setButtonPressed(false);
       alert('Bienvenue sur OFPPT! 🎓');
     }, 150);
   };
 
-  // Responsive styles
-  const getContainerStyles = () => {
-    const baseStyle = {
-      position: 'relative',
-      width: '100%',
-      maxWidth: '440px',
-      height: '956px',
-      background: '#FFFFFF',
-      borderRadius: '20px',
-      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
-      overflow: 'hidden'
-    };
-
-    if (isLargeScreen) {
-      return { ...baseStyle, maxWidth: '540px', height: '1050px' };
-    }
-    if (isMediumScreen) {
-      return { ...baseStyle, maxWidth: '500px', height: '1000px' };
-    }
-    if (isSmallScreen) {
-      return { ...baseStyle, maxWidth: '420px', height: '900px', borderRadius: '15px' };
-    }
-    if (isExtraSmallScreen) {
-      return { ...baseStyle, maxWidth: '100%', height: '100vh', borderRadius: '0' };
-    }
-    return baseStyle;
+  const getResponsiveValue = (values) => {
+    const { isLarge, isMedium, isSmall, isXSmall } = screenSize;
+    if (isLarge) return values.large;
+    if (isMedium) return values.medium;
+    if (isSmall) return values.small;
+    if (isXSmall) return values.xSmall;
+    return values.default;
   };
 
-  const getGradientStyles = () => {
-    const baseStyle = {
-      position: 'absolute',
-      width: '100%',
-      height: '573px',
-      top: '-44px',
-      background: 'linear-gradient(180deg, #C6F1FF 0%, #2BCBFE 75.48%)',
-      borderRadius: '65px',
-      zIndex: 1
-    };
-
-    if (isLargeScreen) {
-      return { ...baseStyle, height: '650px', top: '-50px' };
-    }
-    if (isMediumScreen) {
-      return { ...baseStyle, height: '610px', top: '-48px' };
-    }
-    if (isSmallScreen) {
-      return { ...baseStyle, height: '540px', top: '-40px', borderRadius: '60px' };
-    }
-    if (isExtraSmallScreen) {
-      return { ...baseStyle, height: '50vh', top: '-30px', borderRadius: '50px' };
-    }
-    return baseStyle;
+  const containerStyle = {
+    position: 'relative',
+    width: '100%',
+    maxWidth: getResponsiveValue({
+      large: '100%', medium: '100%', small: '100%', xSmall: '100%', default: '100%'
+    }),
+    height: getResponsiveValue({
+      large: '1050px', medium: '1000px', small: '900px', xSmall: '100vh', default: '956px'
+    }),
+    background: '#FFFFFF',
+    borderRadius: getResponsiveValue({
+      large: '20px', medium: '20px', small: '15px', xSmall: '0', default: '20px'
+    }),
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+    overflow: 'hidden'
   };
 
-  const getImageStyles = () => {
-    const baseStyle = {
-      position: 'absolute',
-      width: '362px',
-      height: '730px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      top: '21px',
-      zIndex: 3,
-      backgroundImage: `url(${Group})`,
-      backgroundSize: 'contain',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
-    };
-
-    if (isLargeScreen) {
-      return { ...baseStyle, width: '420px', height: '800px', top: '30px' };
-    }
-    if (isMediumScreen) {
-      return { ...baseStyle, width: '390px', height: '770px', top: '25px' };
-    }
-    if (isSmallScreen) {
-      return { ...baseStyle, width: '330px', height: '680px', top: '20px' };
-    }
-    if (isExtraSmallScreen) {
-      return { ...baseStyle, width: '85%', height: '65%', top: '15px' };
-    }
-    return baseStyle;
+  const gradientStyle = {
+    position: 'absolute',
+    width: getResponsiveValue({
+      large: '50%', medium: '100%', small: '100%', xSmall: '100%', default: '100%'
+    }),
+    height: getResponsiveValue({
+      large: '100%', medium: '610px', small: '540px', xSmall: '50vh', default: '573px'
+    }),
+    top: getResponsiveValue({
+      large: '-50px', medium: '-48px', small: '-40px', xSmall: '-30px', default: '-44px'
+    }),
+    background: 'linear-gradient(180deg, #C6F1FF 0%, #2BCBFE 75.48%)',
+    borderRadius: getResponsiveValue({
+      large: '65px', medium: '65px', small: '60px', xSmall: '50px', default: '65px'
+    }),
+    zIndex: 1
   };
 
-  const getBubbleLargeStyles = () => {
-    const baseStyle = {
-      position: 'absolute',
-      width: '400px',
-      height: '355px',
-      left: '90px',
-      top: '603px',
-      background: '#42D0FF',
-      opacity: 0.3,
-      borderRadius: '50%',
-      zIndex: 2,
-      animation: 'float 6s ease-in-out infinite'
-    };
-
-    if (isLargeScreen) {
-      return { ...baseStyle, width: '480px', height: '420px', left: '110px', top: '670px' };
-    }
-    if (isMediumScreen) {
-      return { ...baseStyle, width: '440px', height: '390px', left: '100px', top: '640px' };
-    }
-    if (isSmallScreen) {
-      return { ...baseStyle, width: '350px', height: '310px', left: '80px', top: '560px' };
-    }
-    if (isExtraSmallScreen) {
-      return { ...baseStyle, width: '280px', height: '250px', left: '60px', top: '69vh' };
-    }
-    return baseStyle;
+  const imageStyle = {
+    position: 'absolute',
+    width: getResponsiveValue({
+      large: '50%', medium: '1200', small: '100%', xSmall: '100%%', default: '100%'
+    }),
+    height: getResponsiveValue({
+      large: '100%', medium: '700px', small: '620px', xSmall: '620px', default: '620px'
+    }),
+    left: getResponsiveValue({
+      large: '25%', medium: '50%', small: '50%', xSmall: '50%', default: '50%'
+    }),
+    transform: 'translateX(-50%)',
+    top: getResponsiveValue({
+      large: '30px', medium: '25px', small: '20px', xSmall: '15px', default: '21px'
+    }),
+    zIndex: 3,
+    backgroundImage: `url(${Group})`,
+    backgroundSize: 'contain',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
   };
 
-  const getBubbleSmallStyles = () => {
-    const baseStyle = {
-      position: 'absolute',
-      width: '142px',
-      height: '143px',
-      left: '18px',
-      top: '683px',
-      background: 'rgba(254, 197, 127, 0.49)',
-      borderRadius: '50%',
-      zIndex: 2,
-      animation: 'float 6s ease-in-out infinite',
-      animationDelay: '1s'
-    };
-
-    if (isLargeScreen) {
-      return { ...baseStyle, width: '170px', height: '170px', left: '25px', top: '760px' };
-    }
-    if (isMediumScreen) {
-      return { ...baseStyle, width: '155px', height: '155px', left: '22px', top: '720px' };
-    }
-    if (isSmallScreen) {
-      return { ...baseStyle, width: '120px', height: '120px', left: '18px', top: '630px' };
-    }
-    if (isExtraSmallScreen) {
-      return { ...baseStyle, width: '100px', height: '100px', left: '15px', top: '70vh' };
-    }
-    return baseStyle;
+  const bubbleLargeStyle = {
+    position: 'absolute',
+    width: getResponsiveValue({
+      large: '480px', medium: '300px', small: '280px', xSmall: '280px', default: '400px'
+    }),
+    height: getResponsiveValue({
+      large: '420px', medium: '240px', small: '240px', xSmall: '250px', default: '355px'
+    }),
+    left: getResponsiveValue({
+      large: '57%', medium: '27%', small: '25%', xSmall: '20%', default: '27%'
+    }),
+    top: getResponsiveValue({
+      large: '390px', medium: '720px', small: '630px', xSmall: '69vh', default: '603px'
+    }),
+    background: '#42D0FF',
+    opacity: 0.3,
+    borderRadius: '50%',
+    zIndex: 2,
+    animation: 'float 6s ease-in-out infinite'
   };
 
-  const getDotsContainerStyles = () => {
-    const baseStyle = {
-      position: 'absolute',
-      display: 'flex',
-      gap: '12px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      top: '708px',
-      zIndex: 4
-    };
-
-    if (isLargeScreen) {
-      return { ...baseStyle, top: '790px', gap: '15px' };
-    }
-    if (isMediumScreen) {
-      return { ...baseStyle, top: '750px', gap: '14px' };
-    }
-    if (isSmallScreen) {
-      return { ...baseStyle, top: '660px', gap: '11px' };
-    }
-    if (isExtraSmallScreen) {
-      return { ...baseStyle, top: '60vh', gap: '10px' };
-    }
-    return baseStyle;
+  const bubbleSmallStyle = {
+    ...bubbleLargeStyle,
+    width: getResponsiveValue({
+      large: '170px', medium: '155px', small: '120px', xSmall: '100px', default: '142px'
+    }),
+    height: getResponsiveValue({
+      large: '170px', medium: '155px', small: '120px', xSmall: '100px', default: '143px'
+    }),
+    left: getResponsiveValue({
+      large: '51%', medium: '155px', small: '18px', xSmall: '15px', default: '18px'
+    }),
+    top: getResponsiveValue({
+      large: '380px', medium: '720px', small: '630px', xSmall: '70vh', default: '683px'
+    }),
+    background: 'rgba(254, 197, 127, 0.49)',
+    animationDelay: '1s'
   };
 
-  const getDotStyles = (isActive) => {
-    let width = '42px';
-    let height = '28px';
+  const dotsContainerStyle = {
+    position: 'absolute',
+    display: 'flex',
+    gap: getResponsiveValue({
+      large: '15px', medium: '14px', small: '11px', xSmall: '10px', default: '12px'
+    }),
+    left: getResponsiveValue({
+      large: '74%', medium: '50%', small: '50%', xSmall: '50%', default: '50%'
+    }),
+    transform: 'translateX(-50%)',
+    top: getResponsiveValue({
+      large: '120px', medium: '620px', small: '600px', xSmall: '55vh', default: '708px'
+    }),
+    zIndex: 4
+  };
 
-    if (isLargeScreen) {
-      width = '48px';
-      height = '32px';
-    } else if (isMediumScreen) {
-      width = '45px';
-      height = '30px';
-    } else if (isSmallScreen) {
-      width = '38px';
-      height = '26px';
-    } else if (isExtraSmallScreen) {
-      width = '35px';
-      height = '24px';
-    }
+  const getDotStyle = (isActive) => {
+    const size = getResponsiveValue({
+      large: { width: '48px', height: '32px' },
+      medium: { width: '45px', height: '30px' },
+      small: { width: '38px', height: '26px' },
+      xSmall: { width: '35px', height: '24px' },
+      default: { width: '42px', height: '28px' }
+    });
 
     return {
-      width,
-      height,
+      ...size,
       borderRadius: '50%',
       transition: 'all 0.3s ease',
       transform: isActive ? 'scale(1.2)' : 'scale(1)'
     };
   };
 
-  const getButtonContainerStyles = () => {
-    const baseStyle = {
-      position: 'absolute',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      top: '746px',
-      zIndex: 5
-    };
-
-    if (isLargeScreen) {
-      return { ...baseStyle, top: '840px' };
-    }
-    if (isMediumScreen) {
-      return { ...baseStyle, top: '800px' };
-    }
-    if (isSmallScreen) {
-      return { ...baseStyle, top: '710px' };
-    }
-    if (isExtraSmallScreen) {
-      return { ...baseStyle, top: '78vh' };
-    }
-    return baseStyle;
+  const buttonContainerStyle = {
+    position: 'absolute',
+    left: '50%',
+    left: getResponsiveValue({
+      large: '75%', medium: '50%', small: '50%', xSmall: '50%', default: '50%'
+    }),
+    transform: 'translateX(-50%)',
+    top: getResponsiveValue({
+      large: '550px', medium: '800px', small: '710px', xSmall: '78vh', default: '746px'
+    }),
+    zIndex: 5
   };
 
-  const getButtonStyles = () => {
-    let width = '214px';
-    let height = '66px';
-    let borderRadius = '20px';
-
-    if (isLargeScreen) {
-      width = '240px';
-      height = '72px';
-    } else if (isMediumScreen) {
-      width = '230px';
-      height = '70px';
-    } else if (isSmallScreen) {
-      width = '200px';
-      height = '62px';
-    } else if (isExtraSmallScreen) {
-      width = '180px';
-      height = '58px';
-      borderRadius = '18px';
-    }
-
-    return {
-      position: 'relative',
-      width,
-      height,
-      background: 'linear-gradient(135deg, #1a3a52 0%, #2d5f8d 100%)',
-      borderRadius,
-      border: 'none',
-      cursor: 'pointer',
-      overflow: 'hidden',
-      transition: 'all 0.3s ease',
-      boxShadow: '0 10px 30px rgba(3, 32, 58, 0.3)',
-      transform: buttonPressed ? 'scale(0.95)' : 'scale(1)'
-    };
+  const buttonStyle = {
+    position: 'relative',
+    width: getResponsiveValue({
+      large: '240px', medium: '230px', small: '200px', xSmall: '180px', default: '214px'
+    }),
+    height: getResponsiveValue({
+      large: '72px', medium: '70px', small: '62px', xSmall: '58px', default: '66px'
+    }),
+    background: 'linear-gradient(135deg, #1a3a52 0%, #2d5f8d 100%)',
+    borderRadius: getResponsiveValue({
+      large: '20px', medium: '20px', small: '20px', xSmall: '18px', default: '20px'
+    }),
+    border: 'none',
+    cursor: 'pointer',
+    overflow: 'hidden',
+    transition: 'all 0.3s ease',
+    boxShadow: '0 10px 30px rgba(3, 32, 58, 0.3)',
+    transform: buttonPressed ? 'scale(0.95)' : 'scale(1)'
   };
 
-  const getButtonTextStyles = () => {
-    let fontSize = '24px';
-
-    if (isLargeScreen) {
-      fontSize = '28px';
-    } else if (isMediumScreen) {
-      fontSize = '26px';
-    } else if (isSmallScreen) {
-      fontSize = '23px';
-    } else if (isExtraSmallScreen) {
-      fontSize = '20px';
-    }
-
-    return {
-      position: 'relative',
-      fontFamily: "'Lemonada', cursive",
-      fontWeight: 700,
-      fontSize,
-      color: '#FFFFFF',
-      zIndex: 1
-    };
-  };
-
-  const getButtonGlowStyles = () => {
-    let width = '245px';
-    let height = '88px';
-
-    if (isLargeScreen) {
-      width = '270px';
-      height = '95px';
-    } else if (isMediumScreen) {
-      width = '260px';
-      height = '92px';
-    } else if (isSmallScreen) {
-      width = '230px';
-      height = '82px';
-    } else if (isExtraSmallScreen) {
-      width = '210px';
-      height = '75px';
-    }
-
-    return {
-      position: 'absolute',
-      width,
-      height,
-      left: '50%',
-      top: '50%',
-      transform: 'translate(-50%, -50%)',
-      background: 'rgba(11, 64, 170, 0.3)',
-      borderRadius: '50%',
-      pointerEvents: 'none'
-    };
+  const buttonGlowStyle = {
+    position: 'absolute',
+    width: getResponsiveValue({
+      large: '270px', medium: '260px', small: '230px', xSmall: '210px', default: '245px'
+    }),
+    height: getResponsiveValue({
+      large: '95px', medium: '92px', small: '82px', xSmall: '75px', default: '88px'
+    }),
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+    background: 'rgba(11, 64, 170, 0.3)',
+    borderRadius: '50%',
+    pointerEvents: 'none'
   };
 
   return (
@@ -354,16 +235,9 @@ export default function OFPPTApp() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Lemonada:wght@700&family=Poppins:wght@400;500;600&display=swap');
         
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          font-family: 'Poppins', sans-serif;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; }
+        
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
@@ -379,63 +253,57 @@ export default function OFPPTApp() {
         minHeight: '100vh',
         padding: '20px'
       }}>
-        <div style={getContainerStyles()}>
+        <div style={containerStyle}>
+          <div style={gradientStyle} />
+          <div style={imageStyle} />
+          <div style={bubbleLargeStyle} />
+          <div style={bubbleSmallStyle} />
           
-          {/* Gradient Background */}
-          <div style={getGradientStyles()} />
-
-          {/* Main Image: Logo OFPPT + People + Blue Arrow */}
-          <div style={getImageStyles()} />
-
-          {/* Decoration Bubbles */}
-          <div style={getBubbleLargeStyles()} />
-          <div style={getBubbleSmallStyles()} />
-
-          {/* Pagination Dots */}
-          <div style={getDotsContainerStyles()}>
-            {[1, 2, 3].map((dot) => (
-              <div
-                key={dot}
-                style={{
-                  ...getDotStyles(activeDot === dot),
-                  background: activeDot === dot 
-                    ? 'rgba(238, 167, 191, 1)' 
-                    : dot === 1 
-                      ? 'rgba(238, 167, 191, 0.42)'
-                      : dot === 2
-                        ? 'rgba(238, 167, 191, 0.67)'
-                        : 'rgba(238, 167, 169, 0.62)'
-                }}
-              />
+          <div style={dotsContainerStyle}>
+            {[1, 2, 3].map(dot => (
+              <div key={dot} style={{
+                ...getDotStyle(activeDot === dot),
+                background: activeDot === dot 
+                  ? 'rgba(238, 167, 191, 1)' 
+                  : dot === 1 
+                    ? 'rgba(238, 167, 191, 0.42)'
+                    : dot === 2
+                      ? 'rgba(238, 167, 191, 0.67)'
+                      : 'rgba(238, 167, 169, 0.62)'
+              }} />
             ))}
           </div>
 
-          {/* Start Button */}
-          <div style={getButtonContainerStyles()}>
+          <div style={buttonContainerStyle}>
             <button
               onClick={handleStart}
-              style={getButtonStyles()}
-              onMouseEnter={(e) => {
+              style={buttonStyle}
+              onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-3px)';
                 e.currentTarget.style.boxShadow = '0 15px 40px rgba(2, 32, 58, 0.4)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 if (!buttonPressed) {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '0 10px 30px rgba(1, 16, 29, 0.3)';
                 }
               }}
             >
-              {/* Button Glow Effect */}
-              <div style={getButtonGlowStyles()} />
-              
-              {/* Button Text */}
-              <span style={getButtonTextStyles()}>
+              <div style={buttonGlowStyle} />
+              <span style={{
+                position: 'relative',
+                fontFamily: "'Lemonada', cursive",
+                fontWeight: 700,
+                fontSize: getResponsiveValue({
+                  large: '28px', medium: '26px', small: '23px', xSmall: '20px', default: '24px'
+                }),
+                color: '#FFFFFF',
+                zIndex: 1
+              }}>
                 Commencer
               </span>
             </button>
           </div>
-
         </div>
       </div>
     </>

@@ -56,7 +56,7 @@ export default function OFPPTApp() {
     position: 'relative',
     width: '100%',
     maxWidth: getResponsiveValue({
-      large: '100%', medium: '100%', small: '100%', xSmall: '100%', default: '100%'
+      large: '540px', medium: '500px', small: '420px', xSmall: '100%', default: '440px'
     }),
     height: getResponsiveValue({
       large: '1050px', medium: '1000px', small: '900px', xSmall: '100vh', default: '956px'
@@ -71,11 +71,9 @@ export default function OFPPTApp() {
 
   const gradientStyle = {
     position: 'absolute',
-    width: getResponsiveValue({
-      large: '50%', medium: '100%', small: '100%', xSmall: '100%', default: '100%'
-    }),
+    width: '100%',
     height: getResponsiveValue({
-      large: '100%', medium: '610px', small: '540px', xSmall: '50vh', default: '573px'
+      large: '650px', medium: '610px', small: '540px', xSmall: '50vh', default: '573px'
     }),
     top: getResponsiveValue({
       large: '-50px', medium: '-48px', small: '-40px', xSmall: '-30px', default: '-44px'
@@ -90,14 +88,12 @@ export default function OFPPTApp() {
   const imageStyle = {
     position: 'absolute',
     width: getResponsiveValue({
-      large: '50%', medium: '1200', small: '100%', xSmall: '100%%', default: '100%'
+      large: '420px', medium: '390px', small: '330px', xSmall: '85%', default: '362px'
     }),
     height: getResponsiveValue({
-      large: '100%', medium: '700px', small: '620px', xSmall: '620px', default: '620px'
+      large: '800px', medium: '760px', small: '680px', xSmall: '65%', default: '730px'
     }),
-    left: getResponsiveValue({
-      large: '25%', medium: '50%', small: '50%', xSmall: '50%', default: '50%'
-    }),
+    left: '50%',
     transform: 'translateX(-50%)',
     top: getResponsiveValue({
       large: '30px', medium: '25px', small: '20px', xSmall: '15px', default: '21px'
@@ -112,16 +108,16 @@ export default function OFPPTApp() {
   const bubbleLargeStyle = {
     position: 'absolute',
     width: getResponsiveValue({
-      large: '480px', medium: '300px', small: '280px', xSmall: '280px', default: '400px'
+      large: '480px', medium: '440px', small: '350px', xSmall: '280px', default: '400px'
     }),
     height: getResponsiveValue({
-      large: '420px', medium: '240px', small: '240px', xSmall: '250px', default: '355px'
+      large: '420px', medium: '390px', small: '310px', xSmall: '250px', default: '355px'
     }),
     left: getResponsiveValue({
-      large: '57%', medium: '27%', small: '25%', xSmall: '20%', default: '27%'
+      large: '110px', medium: '100px', small: '80px', xSmall: '60px', default: '90px'
     }),
     top: getResponsiveValue({
-      large: '390px', medium: '720px', small: '630px', xSmall: '69vh', default: '603px'
+      large: '670px', medium: '640px', small: '560px', xSmall: '69vh', default: '603px'
     }),
     background: '#42D0FF',
     opacity: 0.3,
@@ -139,10 +135,10 @@ export default function OFPPTApp() {
       large: '170px', medium: '155px', small: '120px', xSmall: '100px', default: '143px'
     }),
     left: getResponsiveValue({
-      large: '51%', medium: '155px', small: '18px', xSmall: '15px', default: '18px'
+      large: '25px', medium: '22px', small: '18px', xSmall: '15px', default: '18px'
     }),
     top: getResponsiveValue({
-      large: '380px', medium: '720px', small: '630px', xSmall: '70vh', default: '683px'
+      large: '760px', medium: '720px', small: '630px', xSmall: '70vh', default: '683px'
     }),
     background: 'rgba(254, 197, 127, 0.49)',
     animationDelay: '1s'
@@ -154,12 +150,10 @@ export default function OFPPTApp() {
     gap: getResponsiveValue({
       large: '15px', medium: '14px', small: '11px', xSmall: '10px', default: '12px'
     }),
-    left: getResponsiveValue({
-      large: '74%', medium: '50%', small: '50%', xSmall: '50%', default: '50%'
-    }),
+    left: '50%',
     transform: 'translateX(-50%)',
     top: getResponsiveValue({
-      large: '120px', medium: '620px', small: '600px', xSmall: '55vh', default: '708px'
+      large: '790px', medium: '750px', small: '660px', xSmall: '60vh', default: '708px'
     }),
     zIndex: 4
   };
@@ -184,12 +178,9 @@ export default function OFPPTApp() {
   const buttonContainerStyle = {
     position: 'absolute',
     left: '50%',
-    left: getResponsiveValue({
-      large: '75%', medium: '50%', small: '50%', xSmall: '50%', default: '50%'
-    }),
     transform: 'translateX(-50%)',
     top: getResponsiveValue({
-      large: '550px', medium: '800px', small: '710px', xSmall: '78vh', default: '746px'
+      large: '840px', medium: '800px', small: '710px', xSmall: '78vh', default: '746px'
     }),
     zIndex: 5
   };

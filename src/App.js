@@ -1,15 +1,12 @@
 import React from 'react';
-import OFPPTApp from './interface';
-import Filieres from './interface3';
-import EducationLevel from './interface2';
+import Interface from './interf';
 
 function App() {
   return (
     <div className="App">
-      <OFPPTApp />
+      <Interface />
     </div>
   );
 }
-
 
 export default App;
